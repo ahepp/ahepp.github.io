@@ -42,8 +42,8 @@ Likewise the software I wrote (which I'll cover in a later post!) uses the Linux
 
 ## Replace the Thermostat
 
-![image](https://s3.hepp.cloud/public/ahepp/blog/assets/2023/03/gaggia_stock_thermostat.jpeg){: width="350"}
-![image](https://s3.hepp.cloud/public/ahepp/blog/assets/2023/03/gaggia_modified_relay_wiring_indicated.jpeg){: width="350"}
+![image](/assets/2023/03/gaggia_stock_thermostat.jpeg){: width="350"}
+![image](/assets/2023/03/gaggia_modified_relay_wiring_indicated.jpeg){: width="350"}
 
 Here's the inside of our espresso machine:
 
@@ -72,8 +72,8 @@ I didn't bother with new thermal paste on the thermocouple, in part because I wa
 
 ## Connect the controller
 
-![image](https://s3.hepp.cloud/public/ahepp/blog/assets/2023/03/gaggia_modified_top_wiring.jpeg){: width="350"}
-![image](https://s3.hepp.cloud/public/ahepp/blog/assets/2023/03/gaggia_modified_controller_wiring_indicated.jpeg){: width="350"}
+![image](/assets/2023/03/gaggia_modified_top_wiring.jpeg){: width="350"}
+![image](/assets/2023/03/gaggia_modified_controller_wiring_indicated.jpeg){: width="350"}
 
 * Cut two 12" 22 gauge wires
 * Terminate one end of each wire with a fork connector
@@ -84,7 +84,7 @@ I didn't bother with new thermal paste on the thermocouple, in part because I wa
 
 ## Connect the power supply
 
-![image](https://s3.hepp.cloud/public/ahepp/blog/assets/2023/03/gaggia_modified_power_switch.jpeg){: width="350"}
+![image](/assets/2023/03/gaggia_modified_power_switch.jpeg){: width="350"}
 
 * Cut two 12" 14 gauge wires
 * Terminate one end of each wire with a piggyback spade connector
