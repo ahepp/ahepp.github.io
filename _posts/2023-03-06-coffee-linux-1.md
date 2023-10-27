@@ -13,7 +13,7 @@ I logged the temperature via serial link, and plotted the data with Octave.
 
 The results weren't pretty, literally or metaphorically.
 
-![image](https://s3.hepp.cloud/public/ahepp/blog/assets/2023/03/gaggia_stock_thermostat_plot.png)
+![image](/assets/2023/03/gaggia_stock_thermostat_plot.png)
 
 Seriously, my Octave skills are pretty bad.
 For now, let's focus on the overall sawtooth pattern of the  blue plot, boiler temperature.
@@ -65,7 +65,7 @@ We'll calculate values for this _period_ in a later post.
 
 To prove we can do a lot better than the stock thermostat at the start of the post, here's a sneak peek of a plot I produced during early testing of my custom controller.
 
-![image](https://s3.hepp.cloud/public/ahepp/blog/assets/2023/03/initial_pid_plot.png)
+![image](/assets/2023/03/initial_pid_plot.png)
 
 In the [next post][next-post], I'll share diagrams and photos to help you understand the electrical systems and how things are wired up, along with a list of equipment used.
 
