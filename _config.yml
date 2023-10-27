@@ -1,0 +1,8 @@
+title: ahepp.dev
+author: Andrew Hepp
+email: andrew.hepp@ahepp.dev
+github_username: ahepp
+
+theme: minima
+plugins:
+  - jekyll-feed
