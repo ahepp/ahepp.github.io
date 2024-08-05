@@ -63,11 +63,24 @@ You can simply fork Buildroot, and add commits on top of it, or you can use a br
 Coming from a Yocto background, I have a slight preference towards maintaining my changes in an external tree.
 It's worth noting that while this bears a superficial resemblance to a Yocto layer, an external tree is not as complex (or powerful), and there really isn't a *huge* difference between Buildroot's two supported approaches.
 Using the br2-external-tree can help you review the totality of your modifications without cooking up a `git` incantation.
+The external tree seems like it could also avoid some conflicts if you rebase onto an updated version of buildroot, but any conflicts it avoids would likely be superficial.
 
 As an aside, Buildroot's manual is a great resource.
 If you're used to Yocto's endless reams of understructured, duplicative, yet somehow incomplete documentation, don't assume Buildroot is the same.
 
-We'll [add a br2-external-tree][os-tree-commit] and copy our device's defconfig into our tree to modify down the road.
+We'll add a br2-external-tree
+
+    $ mkdir -p tuxpresso
+    $ touch tuxpresso/Config.in
+    $ cat << EOF > tuxpresso/external.desc
+    name: TUXPRESSO
+    desc: Linux espresso machine control
+    EOF
+    $ cat << EOF > tuxpresso/external.mk
+    "include $(sort $(wildcard $(BR2_EXTERNAL_TUXPRESSO_PATH)/package/*/*.mk))"
+    EOF
+
+and copy our device's defconfig into our tree to modify down the road.
 
     $ mkdir -p tuxpresso/config
     $ cp buildroot/config/raspberrypi0w_defconfig tuxpresso/config/tuxpresso0w_defconfig
@@ -83,6 +96,7 @@ If we want this done automatically, we can [enable `mdev`][os-mdev-commit], a st
 
 Now let's configure our wifi settings.
 We'll want to [add a rootfs overlay][os-overlay-commit], and I've chosen to copy the WPA supplicant configuration from the FAT formatted `/boot` partition of the SD card every time the system boots.
+Note that overlay permissions are preserved, and if you examine the linked diff carefully you will see that `/etc/init.d/S01config has permissions 755.
 I probably should have mounted the filesystem as read only, since we would really be unhappy if the system somehow decided to corrupt `/boot`.
 Since our interface configuration doesn't have any secrets in it, I've simply [added it to the overlay][os-interfaces-commit].
 
