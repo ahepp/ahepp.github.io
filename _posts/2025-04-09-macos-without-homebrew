@@ -1,0 +1,149 @@
+---
+layout: post
+title:  "MacOS Without Homebrew"
+---
+
+## Installation
+
+Cloning tmux from git and running `sh autogen.sh`, we get:
+
+```
+ahepp@mba4 tmux_git % ./autogen.sh 
+./autogen.sh: line 15: aclocal: command not found
+aclocal failed
+```
+
+This error is due to GNU Automake not being installed.
+
+Cloning automake from git and running `./bootstrap`, we get:
+
+```
+ahepp@mba4 automake_git % ./bootstrap 
+sh: autom4te: command not found
+aclocal.tmp: error: autom4te failed with exit status: 127
+```
+
+This error is due to GNU Autoconf not being installed.
+
+Cloning autoconf from git and running `./bootstrap`, we get:
+
+```
+ahepp@mba4 autoconf_git % ./bootstrap 
+bootstrap: m4 (GNU M4 1.4.6) is too old
+```
+
+This is pretty self explanatory.
+
+Cloning m4 from git, we checkout the stable branch and run `./bootstrap` to get:
+
+```
+ahepp@mba4 m4_git % git checkout branch-1.4
+branch 'branch-1.4' set up to track 'origin/branch-1.4'.
+Switched to a new branch 'branch-1.4'
+ahepp@mba4 m4_git % ./bootstrap 
+bootstrap:   error: Prerequisite 'help2man' not found. Please install it, or
+bootstrap:          'export HELP2MAN=/path/to/help2man'.
+bootstrap:   error: Prerequisite 'makeinfo' not found. Please install it, or
+bootstrap:          'export MAKEINFO=/path/to/makeinfo'.
+bootstrap:   error: Prerequisite 'xz' not not found. Please install it, or
+bootstrap:          'export XZ=/path/to/xz'.
+bootstrap:   error: Prerequisite 'autoconf' not found. Please install it, or
+bootstrap:          'export AUTOCONF=/path/to/autoconf'.
+bootstrap:   error: Prerequisite 'automake' not found. Please install it, or
+bootstrap:          'export AUTOMAKE=/path/to/automake'.
+bootstrap:   error: Prerequisite 'autopoint' not found. Please install it, or
+bootstrap:          'export AUTOPOINT=/path/to/autopoint'.
+bootstrap:   error: HACKING explains how to obtain these prerequisite programs:
+bootstrap:          Program    Min_version Homepage                            
+bootstrap:          -----------------------------------------------------------
+bootstrap:          help2man   1.29        https://www.gnu.org/s/help2man      
+bootstrap:          makeinfo   7.0         https://www.gnu.org/s/texinfo       
+bootstrap:          xz         -           http://tukaani.org/xz               
+bootstrap:          autoconf   2.64        https://www.gnu.org/s/autoconf      
+bootstrap:          automake   1.11.6      https://www.gnu.org/s/automake      
+bootstrap:          autopoint  0.19.2      https://www.gnu.org/s/gettext       
+bootstrap:          -----------------------------------------------------------
+```
+
+Well now we're really up shit's creek.
+All those tools will require automake to build.
+
+Let's download the source release tarball for m4-1.4.19.
+Now when we run `./configure --prefix=/Users/ahepp/local`, we finally see a long and successful result.
+From there we can run `make` and `make install`.
+
+Now we can traverse back up this tree and bootstrap autoconf.
+At this point we get an error:
+
+```
+```
+
+Autoconf actually needs automake to bootstrap.
+One of the two must be installed from a source release tarball with a pre-generated `./configure` script.
+The good news is that we needed the newer version of m4 for that anyways.
+If we download the autoconf-2.72 tarball we can run the standard `./configure && make && make install`.
+
+Now we're finally back to automake!
+Running `./bootstrap` and then `make` gives us:
+
+```
+config.status: creating pre-inst-env
+  MAKEINFO doc/automake.info
+/Users/ahepp/src/automake/automake_git/lib/missing: line 85: makeinfo: command not found
+WARNING: 'makeinfo' is missing on your system.
+         You should only need it if you modified a '.texi' file, or
+         any other file indirectly affecting the aspect of the manual.
+         You might want to install the Texinfo package:
+         <https://www.gnu.org/software/texinfo/>
+         The spurious makeinfo call might also be the consequence of
+         using a buggy 'make' (AIX, DU, IRIX), in which case you might
+         want to install GNU make:
+         <https://www.gnu.org/software/make/>
+make: *** [doc/automake.info] Error 127
+
+Since texinfo requires automake to build, we're stuck again.
+Let's just download an automake source tarball with a pre-generated `./configure` script.
+If we download the automake-1.17 tarball we can run the standard `./configure && make && make install`.
+
+Now we're finally back to building tmux.
+The autogen.sh script runs, but when we run the resulting `./configure` we see:
+
+```
+ahepp@mba4 tmux_git % ./configure > /dev/null
+./configure: line 6147: PKG_PROG_PKG_CONFIG: command not found
+./configure: line 7491: syntax error near unexpected token `newline'
+./configure: line 7491: `PKG_CHECK_MODULES('
+```
+
+This means we need pkg-config!
+Pkg-config requires libtool to build.
+Libtool also requires xz, etc, to bootstrap, so we will download a source tarball.
+
+After installing libtool, we can run the `autogen.sh` script for pkg-config.
+Then we can run `./configure`, but we will need to add `--with-internal-glib` to prevent going further down the rabbit hole.
+We also need `CFLAGS="-Wno-int-conversion" CXXFLAGS="-Wno-int-conversion"`.
+
+Now we can finally go back to tmux, where we will need to re-run the `autogen.sh` script.
+Now when we run `./configure` we get an error about missing libevent.
+
+Installing libevent from git should be pretty similar to all the stuff we've done before.
+I didn't encounter anything interesting there.
+
+Back in tmux land `./configure` now gives us an error saying that we must either enable or disable utf8 support.
+Enabling it would require us to install libutf8proc, so let's just disable it for now.
+
+And now we can run `make` and `make install`! Hello tmux!
+
+
+
+
+
+tmux_git
+    automake-1.17
+        autoconf-2.72
+            m4-1.4.19
+    pkg-config
+        libtool-2.5.4
+        glib
+            meson?
+            pkg-config?
